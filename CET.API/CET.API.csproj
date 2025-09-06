@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CET.Repository\CET.Repository.csproj" />
+    <ProjectReference Include="..\CET.Infrastructure\CET.Infrastructure.csproj" />
     <ProjectReference Include="..\CET.Service\CET.Service.csproj" />
   </ItemGroup>
 

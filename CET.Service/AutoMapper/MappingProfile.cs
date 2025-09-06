@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CET.Domain.Dtos;
-using CET.Repository.Entity.Users;
+using CET.Infrastructure.Entity.Users;
 
 namespace CET.Service.AutoMapper
 {

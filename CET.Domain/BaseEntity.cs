@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CET.Repository
+namespace CET.Infrastructure
 {
     public class BaseEntity
     {

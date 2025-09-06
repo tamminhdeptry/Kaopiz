@@ -1,11 +1,15 @@
 ﻿using CET.Domain;
+using CET.Domain.Caching;
 using CET.Domain.Dtos;
 using CET.Domain.Extensions;
+using CET.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace CET.Service
@@ -32,6 +36,22 @@ namespace CET.Service
                     };
                     config.Events = new JwtBearerEvents()
                     {
+                        OnTokenValidated = async context =>
+                        {
+                            string? jti = context.Principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                            if (jti != string.Empty)
+                            {
+                                var cacheService = context.HttpContext.RequestServices.GetService<ICacheService>();
+                                if (cacheService != null)
+                                {
+                                    var cache = await cacheService.GetCacheAsync<RevokeTokenCacheItem>(jti);
+                                    if (cache != null && cache.RevokedAt.HasValue && cache.RevokedAt.Value < DateTimeOffset.UtcNow)
+                                    {
+                                        context.Fail("token da bi revoke");
+                                    }
+                                }
+                            }
+                        },
                         OnAuthenticationFailed = async auth =>
                         {
                             await Task.CompletedTask;

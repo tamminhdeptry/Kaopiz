@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CET.Domain\CET.Domain.csproj" />
-    <ProjectReference Include="..\CET.Repository\CET.Repository.csproj" />
   </ItemGroup>
 
 </Project>

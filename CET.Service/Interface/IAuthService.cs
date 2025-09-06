@@ -6,7 +6,7 @@ namespace CET.Service.Interface
     {
         Task<UserTokenDTO> Login(LoginDTO loginDTO);
         Task<TokenResponseDTO> RefreshToken(RefreshTokenDTO tokenDTO);
-        Task Logout(string token);
+        Task Logout(string refreshToken);
         Task<string> Register(RegisterDto registerDTO);
     }
 }

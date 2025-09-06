@@ -1,7 +1,7 @@
 ﻿
 using CET.Domain.Enum;
 
-namespace CET.Repository.Entity.Users
+namespace CET.Infrastructure.Entity.Users
 {
     public class UserEntity : BaseEntity
     {

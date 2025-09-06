@@ -1,6 +1,6 @@
 ﻿
 
-namespace CET.Repository.Config.Users
+namespace CET.Infrastructure.Config.Users
 {
     public class UserEntityConfig
     {

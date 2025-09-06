@@ -1,6 +1,6 @@
 ﻿using CET.Domain.Interfaces;
 
-namespace CET.Repository
+namespace CET.Infrastructure
 {
     internal class Repository : IRepository
     {

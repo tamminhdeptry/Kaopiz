@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using CET.Repository;
+using CET.Infrastructure;
 
 namespace Kaopiz
 {
