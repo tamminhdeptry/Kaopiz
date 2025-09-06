@@ -5,17 +5,17 @@ namespace CET.Service.Service
 {
     public class AuthService : IAuthService
     {
-        public Task<UserTokenDTO> Login(LoginDTO loginDTO, string userAgent)
+        public Task<UserTokenDTO> Login(LoginDTO loginDTO)
         {
             throw new NotImplementedException();
         }
 
-        public Task Logout(string userAgent, string token)
+        public Task Logout(string token)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TokenResponseDTO> RefreshToken(RefreshTokenDTO tokenDTO, string userAgent)
+        public Task<TokenResponseDTO> RefreshToken(RefreshTokenDTO tokenDTO)
         {
             throw new NotImplementedException();
         }
