@@ -1,0 +1,32 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-ui
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+volumes:
+  redis-data:

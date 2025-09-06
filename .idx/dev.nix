@@ -10,6 +10,7 @@
     pkgs.icu
     pkgs.openssl
     pkgs.docker
+    pkgs.docker-compose
   ];
   # Sets environment variables in the workspace
   env = { };

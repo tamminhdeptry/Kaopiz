@@ -24,7 +24,8 @@ namespace CET.Service.Extensions
         public static IServiceCollection AddCETService(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ISecurityService, SecurityService>();
             return services;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using CET.Infrastructure.Caching.Redis;
+using CET.Infrastructure.Repositories;
 using CET.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,9 @@ namespace CET.Infrastructure
             });
 
             services.AddScoped<ICacheService, RedisCacheService>();
+            services.AddScoped<IUserCacheService, UserCacheService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
 
             return services;
         }
