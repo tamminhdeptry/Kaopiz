@@ -1,0 +1,27 @@
+﻿@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Shared.MainLayout)">
+                <NotAuthorized>
+                    <p>You are not authorized. Please <a href="/login">login</a>.</p>
+                </NotAuthorized>
+                <Authorizing>
+                    <p>Authorizing...</p>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="typeof(Shared.MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+<BlazoredToasts Position="ToastPosition.TopRight" Timeout="10" ShowProgressBar="true" IconType="IconType.Blazored"
+    SuccessIcon="bi bi-hand-thumbs-up" WarningIcon="bi bi-exclamation-triangle" InfoIcon="bi bi-info-circle"
+    ErrorIcon="bi bi-bug" />

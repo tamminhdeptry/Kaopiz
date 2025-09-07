@@ -1,0 +1,69 @@
+@page "/register"
+@layout AuthLayout
+@using Kaopiz.Shared.Contracts
+@using System.ComponentModel.DataAnnotations
+@using Kaopiz.Web.Blazorwasm.Pages.Error
+@using Kaopiz.Web.Blazorwasm.Shared
+
+<div class="login-container register-container">
+    <div class="form-section">
+        <div class="login-header">
+            <img src="images/logo.svg" alt="Logo" />
+            <h2>Create Account</h2>
+        </div>
+
+        <EditForm Model="@_registerModel" OnValidSubmit="HandleRegisterAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ErrorElement FormSummaryId="login-form-id" Errors="_errors" />
+            <div class="mb-3">
+                <label class="form-label">Select User Type</label>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="user-type-card @(_registerModel.Type == CUserType.Admin ? "active" : "")"
+                            @onclick="() => SelectUserType(CUserType.Admin)">
+                            <img src="https://via.placeholder.com/50?text=Admin" alt="Admin">
+                            <i class="bi bi-shield-lock"></i>
+                            <p class="mb-0">Admin</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="user-type-card @(_registerModel.Type == CUserType.User ? "active" : "")"
+                            @onclick="() => SelectUserType(CUserType.User)">
+                            <img src="https://via.placeholder.com/50?text=User" alt="User">
+                            <i class="bi bi-person"></i>
+                            <p class="mb-0">User</p>
+                        </div>
+                    </div>
+                </div>
+                <ValidationMessage For="@(() => _registerModel.Type)" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <InputText class="form-control" @bind-Value="_registerModel.UserName" />
+                <ValidationMessage For="@(() => _registerModel.UserName)" />
+                <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.UserName)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Display Name</label>
+                <InputText class="form-control" @bind-Value="_registerModel.DisplayName" />
+                <ValidationMessage For="@(() => _registerModel.DisplayName)" />
+                <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.DisplayName)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <InputText type="password" class="form-control" @bind-Value="_registerModel.Password" />
+                <ValidationMessage For="@(() => _registerModel.Password)" />
+                <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.Password)" />
+            </div>
+            <button type="submit" class="btn-login">Register</button>
+        </EditForm>
+    </div>
+
+    <div class="promo-section register-promo">
+        <h2>Welcome to Kaopiz!</h2>
+        <p>Create your account and start exploring.</p>
+    </div>
+</div>

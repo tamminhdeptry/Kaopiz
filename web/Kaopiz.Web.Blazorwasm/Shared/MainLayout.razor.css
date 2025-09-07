@@ -1,0 +1,33 @@
+.page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #0d6efd;
+    color: #fff;
+}
+
+.sidebar a {
+    color: #fff;
+    display: block;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background: #0b5ed7;
+}
+
+.top-row {
+    border-bottom: 1px solid #eee;
+    height: 56px;
+    display: flex;
+    align-items: center;
+}
+
+.content {
+    padding-top: 16px;
+}

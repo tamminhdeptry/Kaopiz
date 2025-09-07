@@ -1,0 +1,126 @@
+body {
+    background: #f4f4f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.promo-section {
+    background: url('/images/login.png') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    padding: 2rem;
+}
+
+.promo-section h2 {
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.form-section {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header img {
+    width: 60px;
+    margin-bottom: 1rem;
+}
+
+.user-type-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.user-type-card:hover,
+.user-type-card.active {
+    border-color: #6e8efb;
+    background: #e6f0ff;
+    transform: scale(1.05);
+}
+
+.user-type-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+}
+
+.user-type-card i {
+    font-size: 1.5rem;
+    color: #6e8efb;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border-radius: 8px 0 0 8px;
+}
+
+.btn-login {
+    background: #6e8efb;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    width: 100%;
+    font-weight: bold;
+}
+
+.btn-login:hover {
+    background: #5a78e0;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.field-validation-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .promo-section {
+        display: none;
+    }
+
+    .login-container {
+        border-radius: 0;
+    }
+}
