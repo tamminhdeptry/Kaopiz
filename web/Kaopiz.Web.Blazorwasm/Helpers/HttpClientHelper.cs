@@ -27,14 +27,17 @@ namespace Kaopiz.Web.Blazorwasm
             TRequest data,
             CHttpClientType requestType = CHttpClientType.Private)
         {
-            await PrepareClientAsync(requestType);
+            var request = new HttpRequestMessage(HttpMethod.Post, new Uri(new Uri(_configuration["ServerHost:AuthService"] ?? string.Empty), url))
+            {
+                Content = JsonContent.Create(data)
+            };
 
-            var response = await _httpClient.PostAsJsonAsync(url, data);
+            await AddAuthorizationHeaderAsync(request, requestType);
+
+            var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
-            {
                 return await response.Content.ReadFromJsonAsync<TResponse>();
-            }
 
             var errorContent = await response.Content.ReadAsStringAsync();
             throw new ApplicationException($"API Error ({response.StatusCode}): {errorContent}");
@@ -42,9 +45,11 @@ namespace Kaopiz.Web.Blazorwasm
 
         public async Task PostAsync(string url, CHttpClientType requestType = CHttpClientType.Private)
         {
-            await PrepareClientAsync(requestType);
+            var request = new HttpRequestMessage(HttpMethod.Post, new Uri(new Uri(_configuration["ServerHost:AuthService"] ?? string.Empty), url));
 
-            var response = await _httpClient.PostAsync(url, null);
+            await AddAuthorizationHeaderAsync(request, requestType);
+
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -53,22 +58,19 @@ namespace Kaopiz.Web.Blazorwasm
             }
         }
 
-        private async Task PrepareClientAsync(CHttpClientType httpClientType)
+        private async Task AddAuthorizationHeaderAsync(HttpRequestMessage request, CHttpClientType httpClientType)
         {
-            _httpClient.BaseAddress = new Uri(_configuration["ServerHost:AuthService"] ?? string.Empty);
-
-            var jsonData = await _localStorageService.GetItemAsStringAsync(ClientAppConstant.Kaopiz_LocalStorage_App_Key);
-            var loginResponseDto = string.IsNullOrEmpty(jsonData) ? null : JsonConvert.DeserializeObject<LoginResponseDto>(jsonData);
-
-            if (loginResponseDto != null && httpClientType == CHttpClientType.Private)
+            if (httpClientType == CHttpClientType.Private)
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                    ClientAppConstant.Kaopiz_API_Auth_Header_Scheme,
-                    loginResponseDto.AccessToken);
-            }
-            else
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = null;
+                var jsonData = await _localStorageService.GetItemAsStringAsync(ClientAppConstant.Kaopiz_LocalStorage_App_Key);
+                var loginResponseDto = string.IsNullOrEmpty(jsonData) ? null : JsonConvert.DeserializeObject<LoginResponseDto>(jsonData);
+
+                if (loginResponseDto != null)
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue(
+                        ClientAppConstant.Kaopiz_API_Auth_Header_Scheme,
+                        loginResponseDto.AccessToken);
+                }
             }
         }
     }
