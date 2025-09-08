@@ -3,6 +3,7 @@
 @using Kaopiz.Shared.Contracts
 @using System.ComponentModel.DataAnnotations
 @using Kaopiz.Web.Blazorwasm.Pages.Error
+@using Kaopiz.Web.Blazorwasm.Pages.Loading
 @using Kaopiz.Web.Blazorwasm.Shared
 
 <div class="login-container register-container">
@@ -16,21 +17,24 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ErrorElement FormSummaryId="login-form-id" Errors="_errors" />
+
             <div class="mb-3">
                 <label class="form-label">Select User Type</label>
                 <div class="row g-2">
                     <div class="col-6">
                         <div class="user-type-card @(_registerModel.Type == CUserType.Admin ? "active" : "")"
-                            @onclick="() => SelectUserType(CUserType.Admin)">
-                            <img src="https://via.placeholder.com/50?text=Admin" alt="Admin">
+                             @onclick="() => SelectUserType(CUserType.Admin)">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                                 alt="Admin" class="img-fluid mb-2" width="50" height="50" />
                             <i class="bi bi-shield-lock"></i>
                             <p class="mb-0">Admin</p>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="user-type-card @(_registerModel.Type == CUserType.User ? "active" : "")"
-                            @onclick="() => SelectUserType(CUserType.User)">
-                            <img src="https://via.placeholder.com/50?text=User" alt="User">
+                             @onclick="() => SelectUserType(CUserType.User)">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
+                                 alt="User" class="img-fluid mb-2" width="50" height="50" />
                             <i class="bi bi-person"></i>
                             <p class="mb-0">User</p>
                         </div>
@@ -38,27 +42,39 @@
                 </div>
                 <ValidationMessage For="@(() => _registerModel.Type)" />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Username</label>
-                <InputText class="form-control" @bind-Value="_registerModel.UserName" />
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <InputText class="form-control" @bind-Value="_registerModel.UserName" placeholder="Enter username" />
+                </div>
                 <ValidationMessage For="@(() => _registerModel.UserName)" />
                 <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.UserName)" />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Display Name</label>
-                <InputText class="form-control" @bind-Value="_registerModel.DisplayName" />
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                    <InputText class="form-control" @bind-Value="_registerModel.DisplayName" placeholder="Enter display name" />
+                </div>
                 <ValidationMessage For="@(() => _registerModel.DisplayName)" />
                 <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.DisplayName)" />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <InputText type="password" class="form-control" @bind-Value="_registerModel.Password" />
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <InputText type="password" class="form-control" @bind-Value="_registerModel.Password" placeholder="Enter password" />
+                </div>
                 <ValidationMessage For="@(() => _registerModel.Password)" />
                 <ErrorElement Errors="_errors" FieldName="@nameof(RegisterRequestDto.Password)" />
             </div>
-            <button type="submit" class="btn-login">Register</button>
+
+            <button type="submit" class="btn btn-login w-100 mb-2">Register</button>
+            <a href="/login" class="btn btn-outline-secondary w-100">Back to Login</a>
         </EditForm>
     </div>
 
@@ -67,3 +83,5 @@
         <p>Create your account and start exploring.</p>
     </div>
 </div>
+
+<LoadingElement @bind-IsLoading="_isLoading" />

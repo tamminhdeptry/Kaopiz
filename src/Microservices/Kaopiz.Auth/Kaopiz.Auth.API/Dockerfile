@@ -1,30 +1,50 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+# =========================
+# 1. Base runtime image
+# =========================
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# =========================
+# 2. Build stage
+# =========================
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Kaopiz.Auth.API/Kaopiz.Auth.API.csproj", "Kaopiz.Auth.API/"]
-RUN dotnet restore "./Kaopiz.Auth.API/Kaopiz.Auth.API.csproj"
-COPY . .
-WORKDIR "/src/Kaopiz.Auth.API"
-RUN dotnet build "./Kaopiz.Auth.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Copy csproj files for restore
+COPY ["src/Microservices/Kaopiz.Auth/Kaopiz.Auth.API/Kaopiz.Auth.API.csproj", "src/Microservices/Kaopiz.Auth/Kaopiz.Auth.API/"]
+COPY ["src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Application/Kaopiz.Auth.Application.csproj", "src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Application/"]
+COPY ["src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Domain/Kaopiz.Auth.Domain.csproj", "src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Domain/"]
+COPY ["src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Infrastructure/Kaopiz.Auth.Infrastructure.csproj", "src/Microservices/Kaopiz.Auth/Kaopiz.Auth.Infrastructure/"]
+COPY ["src/shared/Kaopiz.Shared.Contracts/Kaopiz.Shared.Contracts.csproj", "src/shared/Kaopiz.Shared.Contracts/"]
+
+# Restore NuGet packages
+RUN dotnet restore "src/Microservices/Kaopiz.Auth/Kaopiz.Auth.API/Kaopiz.Auth.API.csproj"
+
+# Copy toàn bộ source code
+COPY . .
+
+# Build project
+WORKDIR "/src/src/Microservices/Kaopiz.Auth/Kaopiz.Auth.API"
+RUN dotnet build "Kaopiz.Auth.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# =========================
+# 3. Publish stage
+# =========================
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Kaopiz.Auth.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Kaopiz.Auth.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# =========================
+# 4. Final runtime image
+# =========================
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Env vars
+ENV ASPNETCORE_URLS=http://+:8080 \
+    DOTNET_RUNNING_IN_CONTAINER=true
+
 ENTRYPOINT ["dotnet", "Kaopiz.Auth.API.dll"]

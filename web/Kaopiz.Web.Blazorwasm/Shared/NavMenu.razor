@@ -1,11 +1,27 @@
 @using Microsoft.AspNetCore.Components.Authorization
 <AuthorizeView>
     <Authorized>
-        <a href="/">Home</a>
-        <a href="javascript:void(0)" @onclick="LogoutAsync">Logout</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <span class="nav-link">Xin chào @_userDto?.Type.ToString() - @_userDto?.DisplayName</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" @onclick="LogoutAsync"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register"><i class="bi bi-person-plus"></i> Đăng ký</a>
+                </li>
+            </ul>
+        </div>
     </NotAuthorized>
 </AuthorizeView>

@@ -1,12 +1,13 @@
 ﻿@using Blazored.Toast
 @using Blazored.Toast.Configuration
+@using Kaopiz.Web.Blazorwasm.Pages.RedirectToLogin
 @using Microsoft.AspNetCore.Components.Authorization
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Shared.MainLayout)">
                 <NotAuthorized>
-                    <p>You are not authorized. Please <a href="/login">login</a>.</p>
+                    <RedirectToLogin />
                 </NotAuthorized>
                 <Authorizing>
                     <p>Authorizing...</p>

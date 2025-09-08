@@ -2,7 +2,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
 using Kaopiz.Shared.Contracts;
-using Newtonsoft.Json;
 
 namespace Kaopiz.Web.Blazorwasm
 {
@@ -21,6 +20,26 @@ namespace Kaopiz.Web.Blazorwasm
             _configuration = configuration;
             _localStorageService = localStorageService;
         }
+
+        public async Task<TResponse?> GetAsync<TResponse>(
+            string url,
+            CHttpClientType requestType = CHttpClientType.Private)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_configuration["ServerHost:AuthService"] ?? string.Empty), url));
+
+            await AddAuthorizationHeaderAsync(request, requestType);
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<TResponse>();
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new ApplicationException($"API Error ({response.StatusCode}): {errorContent}");
+        }
+
 
         public async Task<TResponse?> PostAsync<TResponse, TRequest>(
             string url,
@@ -62,8 +81,7 @@ namespace Kaopiz.Web.Blazorwasm
         {
             if (httpClientType == CHttpClientType.Private)
             {
-                var jsonData = await _localStorageService.GetItemAsStringAsync(ClientAppConstant.Kaopiz_LocalStorage_App_Key);
-                var loginResponseDto = string.IsNullOrEmpty(jsonData) ? null : JsonConvert.DeserializeObject<LoginResponseDto>(jsonData);
+                var loginResponseDto = await _localStorageService.GetItemAsync<LoginResponseDto>(ClientAppConstant.Kaopiz_LocalStorage_App_Key);
 
                 if (loginResponseDto != null)
                 {

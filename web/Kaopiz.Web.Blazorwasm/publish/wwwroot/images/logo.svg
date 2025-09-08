@@ -1,0 +1,8 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="30" fill="#E6F0FF"/>
+    <path d="M30 20 L30 60 M30 40 L50 20 M30 40 L50 60" stroke="#1E3A8A" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="30" cy="40" r="4" fill="#2563EB"/>
+    <text x="70" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1E3A8A">Kaopiz</text>
+    <text x="70" y="65" font-family="Arial, sans-serif" font-size="12" fill="#4B5563">Software Solutions</text>
+</svg>

@@ -10,6 +10,9 @@ namespace Kaopiz.Web.Blazorwasm.Pages.Register
         [Inject] private IHttpClientHelper _httpClient { get; set; } = default!;
         [Inject] private IToastService _toastService { get; set; } = default!;
         [Inject] private NavigationManager _navigationManager { get; set; } = default!;
+        [Inject] private CustomAuthStateProvider _authProvider { get; set; } = default!;
+
+        private bool _isLoading { get; set; } = false;
 
         private RegisterRequestDto _registerModel = new RegisterRequestDto()
         {
@@ -18,11 +21,21 @@ namespace Kaopiz.Web.Blazorwasm.Pages.Register
 
         private List<ErrorDetailDto> _errors = new List<ErrorDetailDto>();
 
+        protected override async Task OnInitializedAsync()
+        {
+            var state = await _authProvider.GetAuthenticationStateAsync();
+            if (state.User.Identity?.IsAuthenticated == true)
+            {
+                _navigationManager.NavigateTo("/", forceLoad: true);
+            }
+        }
+
         private async Task HandleRegisterAsync()
         {
             try
             {
-                var registerResponse = await _httpClient.PostAsync<ApiResponse<RegisterResponseDto>, RegisterRequestDto>("/auth/register", _registerModel);
+                _isLoading = true;
+                var registerResponse = await _httpClient.PostAsync<ApiResponse<RegisterResponseDto>, RegisterRequestDto>("api/v1/auth/register", _registerModel);
                 if (registerResponse != null && registerResponse.StatusCode == HttpStatusCode.Created
                     && registerResponse.Result.Data != null && registerResponse.Result.Success)
                 {
@@ -38,6 +51,10 @@ namespace Kaopiz.Web.Blazorwasm.Pages.Register
             catch (Exception ex)
             {
                 _toastService.ShowSuccess(message: ex.Message);
+            }
+            finally
+            {
+                _isLoading = false;
             }
         }
 

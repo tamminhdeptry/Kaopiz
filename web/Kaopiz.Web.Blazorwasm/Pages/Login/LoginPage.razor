@@ -1,41 +1,46 @@
+@using Kaopiz.Web.Blazorwasm.Pages.Loading
 @using Kaopiz.Web.Blazorwasm.Shared
 @page "/login"
 @layout AuthLayout
-
 
 <PageTitle>Login</PageTitle>
 
 <div class="login-container">
     <div class="row g-0">
-        <!-- Promo Section -->
         <div class="col-md-6 promo-section">
             <div>
                 <h2>Welcome Back!</h2>
                 <p>Sign in to manage your account with ease.</p>
             </div>
         </div>
-        <!-- Form Section -->
+
         <div class="col-md-6 form-section">
             <div class="login-header">
                 <img src="images/logo.svg" alt="Logo">
                 <h3>Sign In</h3>
                 <p class="text-muted">Select your role and log in</p>
             </div>
+
             <EditForm Model="@_loginRequestDto" OnValidSubmit="HandleLoginAsync">
                 <DataAnnotationsValidator />
+
                 <div class="mb-3">
                     <label class="form-label">Select User Type</label>
                     <div class="row g-2">
                         <div class="col-6">
-                            <div class="user-type-card @(_loginRequestDto.Type == CUserType.Admin ? "active" : "")" @onclick="() => SelectUserType(CUserType.Admin)">
-                                <img src="https://via.placeholder.com/50?text=Admin" alt="Admin">
+                            <div class="user-type-card @(_loginRequestDto.Type == CUserType.Admin ? "active" : "")"
+                                 @onclick="() => SelectUserType(CUserType.Admin)">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+                                     alt="Admin" class="img-fluid mb-2" width="50" height="50" />
                                 <i class="bi bi-shield-lock"></i>
                                 <p class="mb-0">Admin</p>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="user-type-card @(_loginRequestDto.Type == CUserType.User ? "active" : "")" @onclick="() => SelectUserType(CUserType.User)">
-                                <img src="https://via.placeholder.com/50?text=User" alt="User">
+                            <div class="user-type-card @(_loginRequestDto.Type == CUserType.User ? "active" : "")"
+                                 @onclick="() => SelectUserType(CUserType.User)">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" 
+                                     alt="User" class="img-fluid mb-2" width="50" height="50" />
                                 <i class="bi bi-person"></i>
                                 <p class="mb-0">User</p>
                             </div>
@@ -43,6 +48,7 @@
                     </div>
                     <ValidationMessage For="@(() => _loginRequestDto.Type)" />
                 </div>
+
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-group">
@@ -51,6 +57,7 @@
                     </div>
                     <ValidationMessage For="@(() => _loginRequestDto.UserName)" />
                 </div>
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group">
@@ -59,12 +66,17 @@
                     </div>
                     <ValidationMessage For="@(() => _loginRequestDto.Password)" />
                 </div>
+
                 <div class="mb-3 form-check">
                     <InputCheckbox id="rememberMe" class="form-check-input" @bind-Value="_loginRequestDto.RememberMe" />
                     <label class="form-check-label" for="rememberMe">Remember me</label>
                 </div>
-                <button type="submit" class="btn btn-login">Login</button>
+
+                <button type="submit" class="btn btn-login w-100 mb-2">Login</button>
+                <a href="/register" class="btn btn-outline-secondary w-100">Register</a>
             </EditForm>
         </div>
     </div>
 </div>
+
+<LoadingElement @bind-IsLoading="_isLoading" />

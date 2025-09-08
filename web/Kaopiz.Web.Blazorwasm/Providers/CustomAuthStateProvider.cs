@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Blazored.LocalStorage;
+using Kaopiz.Shared.Contracts;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Kaopiz.Web.Blazorwasm
@@ -17,9 +18,9 @@ namespace Kaopiz.Web.Blazorwasm
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _localStorage.GetItemAsStringAsync(TokenKey);
+            var token = await _localStorage.GetItemAsync<LoginResponseDto>(TokenKey);
 
-            if (string.IsNullOrWhiteSpace(token))
+            if (token == null || string.IsNullOrWhiteSpace(token.AccessToken))
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
             var handler = new JwtSecurityTokenHandler();
@@ -27,7 +28,7 @@ namespace Kaopiz.Web.Blazorwasm
 
             try
             {
-                jwtToken = handler.ReadJwtToken(token);
+                jwtToken = handler.ReadJwtToken(token.AccessToken);
             }
             catch
             {
@@ -41,12 +42,21 @@ namespace Kaopiz.Web.Blazorwasm
             return new AuthenticationState(user);
         }
 
-        public async Task MarkUserAsAuthenticated(string token)
+        public async Task MarkUserAsAuthenticated(LoginResponseDto dto)
         {
-            await _localStorage.SetItemAsStringAsync(TokenKey, token);
-            var authState = await GetAuthenticationStateAsync();
+            await _localStorage.SetItemAsync(TokenKey, dto);
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(dto.AccessToken);
+
+            var identity = new ClaimsIdentity(jwtToken.Claims, "jwtAuth");
+            var user = new ClaimsPrincipal(identity);
+
+            var authState = new AuthenticationState(user);
+
             NotifyAuthenticationStateChanged(Task.FromResult(authState));
         }
+
 
         public async Task MarkUserAsLoggedOut()
         {
